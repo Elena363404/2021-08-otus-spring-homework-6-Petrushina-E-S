@@ -7,11 +7,9 @@ import java.util.Optional;
 
 public interface AuthorDao {
 
-  void createAuthor(Author author);
+  void saveAuthor(Author author);
 
   Optional<Author> getAuthorById(long id);
-
-  void updateAuthor(Author author);
 
   void deleteAuthorById(long id);
 

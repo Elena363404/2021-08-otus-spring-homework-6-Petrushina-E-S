@@ -20,7 +20,7 @@ public class AuthorDaoJpa implements AuthorDao {
   }
 
   @Override
-  public void createAuthor(Author author) {
+  public void saveAuthor(Author author) {
     if (author.getId() == 0) {
       em.persist(author);
     } else {
@@ -31,16 +31,6 @@ public class AuthorDaoJpa implements AuthorDao {
   @Override
   public Optional<Author> getAuthorById(long id) {
     return Optional.ofNullable(em.find(Author.class, id));
-  }
-
-  @Override
-  public void updateAuthor(Author author) {
-    Query query = em.createQuery("update Author s " +
-      "set s.name = :name " +
-      "where s.id = :id");
-    query.setParameter("name", author.getName());
-    query.setParameter("id", author.getId());
-    query.executeUpdate();
   }
 
   @Override

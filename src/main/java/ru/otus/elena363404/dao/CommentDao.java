@@ -7,13 +7,11 @@ import java.util.Optional;
 
 public interface CommentDao {
 
-  void createComment(Comment comment);
+  void saveComment(Comment comment);
 
   Optional<Comment> getCommentById(long id);
 
   List<Comment> getAllCommentByBookId(long id);
-
-  void updateComment(Comment comment);
 
   void deleteCommentById(long id);
 

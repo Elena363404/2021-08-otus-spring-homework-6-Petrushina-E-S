@@ -10,5 +10,7 @@ public interface CommentService {
 
   void getCommentById();
 
+  void getCommentByBookId();
+
   void getAllComment();
 }

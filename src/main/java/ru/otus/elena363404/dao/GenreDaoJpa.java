@@ -21,7 +21,7 @@ public class GenreDaoJpa implements GenreDao {
   }
 
   @Override
-  public void createGenre(Genre genre) {
+  public void saveGenre(Genre genre) {
     if (genre.getId() == 0) {
       em.persist(genre);
     } else {
@@ -32,16 +32,6 @@ public class GenreDaoJpa implements GenreDao {
   @Override
   public Optional<Genre> getGenreById(long id) {
     return Optional.ofNullable(em.find(Genre.class, id));
-  }
-
-  @Override
-  public void updateGenre(Genre genre) {
-    Query query = em.createQuery("update Genre s " +
-      "set s.name = :name " +
-      "where s.id = :id");
-    query.setParameter("name", genre.getName());
-    query.setParameter("id", genre.getId());
-    query.executeUpdate();
   }
 
   @Override

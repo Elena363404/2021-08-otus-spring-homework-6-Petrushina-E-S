@@ -34,8 +34,8 @@ class BookDaoJpaTest {
   @DisplayName("Add book in the DB")
   @Test
   void shouldInsertBook() {
-    Book expectedBook = new Book(6,"BookForTest", new Author(2,"Alexander Pushkin"), new Genre(3,"Novel"), null);
-    bookDao.createBook(expectedBook);
+    Book expectedBook = new Book(6,"BookForTest", new Author(2,"Alexander Pushkin"), new Genre(3,"Novel"));
+    bookDao.saveBook(expectedBook);
     Book actualBook = bookDao.getBookById(expectedBook.getId()).stream().findFirst().orElse(null);
     assertThat(actualBook).isEqualTo(expectedBook);
   }

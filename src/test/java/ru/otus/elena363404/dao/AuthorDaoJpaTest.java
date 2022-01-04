@@ -34,7 +34,7 @@ class AuthorDaoJpaTest {
   @Test
   void shouldInsertAuthor() {
     Author expectedAuthor = new Author(5,"Lermontov");
-    authorDao.createAuthor(expectedAuthor);
+    authorDao.saveAuthor(expectedAuthor);
     Optional<Author> actualAuthor = authorDao.getAuthorById(expectedAuthor.getId());
     assertThat(actualAuthor.stream().findFirst().orElse(null)).usingRecursiveComparison().isEqualTo(expectedAuthor);
   }

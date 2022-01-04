@@ -80,6 +80,11 @@ public class LibraryCommands {
     commentService.getCommentById();
   }
 
+  @ShellMethod(value = "get-comment-by-book", key = {"get comment by book"})
+  public void getCommentByBookId() {
+    commentService.getCommentByBookId();
+  }
+
   @ShellMethod(value = "add-comment", key = {"add comment", "insert comment"})
   public String createComment() {
     commentService.createComment();

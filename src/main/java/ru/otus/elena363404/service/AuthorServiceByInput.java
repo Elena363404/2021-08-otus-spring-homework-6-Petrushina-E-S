@@ -21,17 +21,18 @@ public class AuthorServiceByInput implements AuthorService{
     ioService.out("Input name for the author: \n");
     String nameAuthor = ioService.readString();
     Author author = new Author(0, nameAuthor);
-    authorDao.createAuthor(author);
+    authorDao.saveAuthor(author);
   }
 
   @Override
   @Transactional
   public void updateAuthor() {
     ioService.out("Input id of the author for update: \n");
+    long id = ioService.getInputId();
     ioService.out("Input a new name for the author: \n");
     String name = ioService.readString();
-    Author author = new Author(0, name);
-    authorDao.updateAuthor(author);
+    Author author = new Author(id, name);
+    authorDao.saveAuthor(author);
   }
 
   @Override
@@ -48,7 +49,10 @@ public class AuthorServiceByInput implements AuthorService{
     ioService.out("Input id of the author: \n");
     long id = ioService.getInputId();
 
-    ioService.out(!authorDao.getAuthorById(id).isPresent() ? "Author with input ID not found!" : "\n" + authorDao.getAuthorById(id));
+    ioService.out(authorDao.getAuthorById(id)
+      .map(a -> "\n" + a)
+      .orElse("Author with input ID not found!")
+    );
   }
 
   @Override

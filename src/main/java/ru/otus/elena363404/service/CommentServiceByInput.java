@@ -27,11 +27,12 @@ public class CommentServiceByInput implements CommentService {
     ioService.out("Input comment: \n");
     String txtComment = ioService.readString();
 
-    ioService.out("Input id book for add comment: \n");
+    ioService.out("Input a book ID for comment: \n" + bookDao.getAllBook());
     long idBook = ioService.getInputId();
+    Book book = bookDao.getBookById(idBook).stream().findFirst().orElse(null);
 
-    Comment comment = new Comment(0, txtComment, idBook);
-    commentDao.createComment(comment);
+    Comment comment = new Comment(0, txtComment, book);
+    commentDao.saveComment(comment);
   }
 
   @Override
@@ -42,11 +43,12 @@ public class CommentServiceByInput implements CommentService {
     ioService.out("Input a new comment: \n");
     String txtComment = ioService.readString();
 
-    ioService.out("Input a book ID for comment: \n");
+    ioService.out("Input a book ID for comment: \n" + bookDao.getAllBook());
     long idBook = ioService.getInputId();
+    Book book = bookDao.getBookById(idBook).stream().findFirst().orElse(null);
 
-    Comment comment = new Comment(id, txtComment, idBook);
-    commentDao.updateComment(comment);
+    Comment comment = new Comment(id, txtComment, book);
+    commentDao.saveComment(comment);
   }
 
   @Override
@@ -62,7 +64,21 @@ public class CommentServiceByInput implements CommentService {
   public void getCommentById() {
     ioService.out("Input id of the comment: \n");
     long id = ioService.getInputId();
-    ioService.out(commentDao.getCommentById(id).stream().findFirst().orElse(null) == null ? "Comment with input ID not found!" : "\n" + commentDao.getCommentById(id));
+    ioService.out(commentDao.getCommentById(id)
+      .map(a -> "\n" + a)
+      .orElse("Comment with input ID not found!")
+    );
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public void getCommentByBookId() {
+    ioService.out("Input book id for getting list of comments: \n");
+    long id = ioService.getInputId();
+    List<Comment> commentList = commentDao.getAllCommentByBookId(id);
+    for (int i = 0; i < commentList.size(); i++) {
+      ioService.out(commentList.get(i) + "\n");
+    }
   }
 
   @Override

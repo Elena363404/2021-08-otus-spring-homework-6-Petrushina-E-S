@@ -26,14 +26,14 @@ public class BookServiceByInput implements BookService {
     ioService.out("Input name for the book: \n");
     String nameBook = ioService.readString();
     ioService.out("Input id Author for the book from List: \n" + authorDao.getAllAuthor());
-    long author_id = ioService.getInputId();
-    Author author = authorDao.getAuthorById(author_id).stream().findFirst().orElse(null);
+    long authorId = ioService.getInputId();
+    Author author = authorDao.getAuthorById(authorId).stream().findFirst().orElse(null);
     ioService.out("Input id Genre for the book from List: \n" + genreDao.getAllGenre());
-    long genre_id = ioService.getInputId();
-    Genre genre = genreDao.getGenreById(genre_id).stream().findFirst().orElse(null);
-    Book book = new Book(0, nameBook, author, genre, null);
+    long genreId = ioService.getInputId();
+    Genre genre = genreDao.getGenreById(genreId).stream().findFirst().orElse(null);
+    Book book = new Book(0, nameBook, author, genre);
 
-    bookDao.createBook(book);
+    bookDao.saveBook(book);
   }
 
   @Override
@@ -44,13 +44,13 @@ public class BookServiceByInput implements BookService {
     ioService.out("Input a new name for the book: \n");
     String name = ioService.readString();
     ioService.out("Input id Author for the book from List: \n" + authorDao.getAllAuthor());
-    long author_id = ioService.getInputId();
-    Author author = authorDao.getAuthorById(author_id).stream().findFirst().orElse(null);
+    long authorId = ioService.getInputId();
+    Author author = authorDao.getAuthorById(authorId).stream().findFirst().orElse(null);
     ioService.out("Input id Genre for the book from List: \n" + genreDao.getAllGenre());
-    long genre_id = ioService.getInputId();
-    Genre genre = genreDao.getGenreById(genre_id).stream().findFirst().orElse(null);
-    Book book = new Book(0, name, author, genre, null);
-    bookDao.updateBook(book);
+    long genreId = ioService.getInputId();
+    Genre genre = genreDao.getGenreById(genreId).stream().findFirst().orElse(null);
+    Book book = new Book(id, name, author, genre);
+    bookDao.saveBook(book);
   }
 
   @Override
@@ -66,7 +66,10 @@ public class BookServiceByInput implements BookService {
   public void getBookById() {
     ioService.out("Input id of the book: \n");
     long id = ioService.getInputId();
-    ioService.out(bookDao.getBookById(id) == null ? "Book with input ID not found!" : "\n" + bookDao.getBookById(id));
+    ioService.out(bookDao.getBookById(id)
+      .map(a -> "\n" + a)
+      .orElse("Book with input ID not found!")
+    );
   }
 
   @Override

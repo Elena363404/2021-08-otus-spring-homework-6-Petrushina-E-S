@@ -21,7 +21,7 @@ public class GenreServiceByInput implements GenreService {
     ioService.out("Input name for the genre: \n");
     String nameGenre = ioService.readString();
     Genre genre = new Genre(0, nameGenre);
-    genreDao.createGenre(genre);
+    genreDao.saveGenre(genre);
   }
 
   @Override
@@ -32,7 +32,7 @@ public class GenreServiceByInput implements GenreService {
     ioService.out("Input a new name for the genre: \n");
     String name = ioService.readString();
     Genre genre = new Genre(id, name);
-    genreDao.updateGenre(genre);
+    genreDao.saveGenre(genre);
   }
 
   @Override
@@ -48,7 +48,10 @@ public class GenreServiceByInput implements GenreService {
   public void getGenreById() {
     ioService.out("Input id of the genre: \n");
     long id = ioService.getInputId();
-    ioService.out(genreDao.getGenreById(id) == null ? "Genre with input ID not found!" : "\n" + genreDao.getGenreById(id));
+    ioService.out(genreDao.getGenreById(id)
+      .map(a -> "\n" + a)
+      .orElse("Genre with input ID not found!")
+    );
   }
 
   @Override

@@ -26,23 +26,13 @@ public class Book {
   @Column(name = "name", nullable = false)
   private String name;
 
-  @Fetch(FetchMode.SELECT)
-  @BatchSize(size = 5)
   @ManyToOne(targetEntity = Author.class, fetch = FetchType.LAZY)
   @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "BOOK_AUTHOR_FK"))
   private Author author;
 
-  @Fetch(FetchMode.SELECT)
-  @BatchSize(size = 5)
   @ManyToOne(targetEntity = Genre.class, fetch = FetchType.LAZY)
   @JoinColumn(name = "genre_id", foreignKey = @ForeignKey(name = "BOOK_GENRE_FK"))
   private Genre genre;
-
-  @Fetch(FetchMode.SELECT)
-  @BatchSize(size = 5)
-  @OneToMany(targetEntity = Comment.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  @JoinColumn(name = "book_id")
-  private List<Comment> comment;
 
 }
 

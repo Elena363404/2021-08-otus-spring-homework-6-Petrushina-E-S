@@ -7,11 +7,9 @@ import java.util.Optional;
 
 public interface BookDao {
 
-  void createBook(Book book);
+  void saveBook(Book book);
 
   Optional<Book> getBookById(long id);
-
-  void updateBook(Book book);
 
   void deleteBookById(long id);
 

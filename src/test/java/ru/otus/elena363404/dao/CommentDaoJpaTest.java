@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
+import ru.otus.elena363404.domain.Author;
+import ru.otus.elena363404.domain.Book;
 import ru.otus.elena363404.domain.Comment;
 import ru.otus.elena363404.domain.Genre;
 
@@ -18,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-@Import(CommentDaoJpa.class)
+@Import({CommentDaoJpa.class, BookDaoJpa.class})
 class CommentDaoJpaTest {
 
   private static final long EXISTING_COMMENT_ID = 2L;
@@ -34,13 +36,16 @@ class CommentDaoJpaTest {
   @Autowired
   private CommentDaoJpa commentDao;
 
+  @Autowired
+  private BookDaoJpa bookDao;
+
   @DisplayName("Add comment in the DB")
   @Test
   void shouldInsertComment() {
-    Comment expectedComment = new Comment(4,"Norm", 3);
-    commentDao.createComment(expectedComment);
+    Comment expectedComment = new Comment(4,"Norm", bookDao.getBookById(2).stream().findFirst().orElse(null));
+    commentDao.saveComment(expectedComment);
     Comment actualComment = commentDao.getCommentById(expectedComment.getId()).stream().findFirst().orElse(null);
-    assertThat(actualComment).usingRecursiveComparison().isEqualTo(expectedComment);
+    assertThat(actualComment).isEqualTo(expectedComment);
   }
 
   @DisplayName("Return comment by ID")
@@ -56,9 +61,7 @@ class CommentDaoJpaTest {
   @Test
   void shouldReturnExpectedCommentByBookId() {
     val optionalActualComment = commentDao.getAllCommentByBookId(EXISTING_BOOK_ID);
-    List<Comment> commentList = new ArrayList<>();
-    commentList.add(new Comment(1, "Good book!", 1));
-    commentList.add(new Comment(2, "Bad book!", 1));
+    List<Comment> commentList = getCommentListByBookId(EXISTING_BOOK_ID);
 
     assertThat(commentList).isEqualTo(optionalActualComment);
   }
@@ -66,8 +69,8 @@ class CommentDaoJpaTest {
   @DisplayName("Update comment by ID")
   @Test
   void shouldUpdateExpectedCommentById() {
-    Comment newComment = new Comment(COMMENT_ID_FOR_UPDATE, "Comment after update!", 1);
-    commentDao.updateComment(newComment);
+    Comment newComment = new Comment(COMMENT_ID_FOR_UPDATE, "Comment after update!", bookDao.getBookById(2).stream().findFirst().orElse(null));
+    commentDao.saveComment(newComment);
     Comment updatedComment = commentDao.getCommentById(COMMENT_ID_FOR_UPDATE).stream().findFirst().orElse(null);
 
     assertThat(newComment).isEqualTo(updatedComment);
@@ -97,5 +100,14 @@ class CommentDaoJpaTest {
       .allMatch(s -> !s.getComment().equals(""));
     System.out.println("----------------------------------------------------------------------------------------------------------\n\n\n\n");
     assertThat(sessionFactory.getStatistics().getPrepareStatementCount()).isEqualTo(EXPECTED_QUERIES_COUNT);
+  }
+
+  private List<Comment> getCommentListByBookId(long bookId) {
+    Book book = bookDao.getBookById(bookId).stream().findFirst().orElse(null);
+    List<Comment> commentList = new ArrayList<>();
+    commentList.add(new Comment(1, "Good book!", book));
+    commentList.add(new Comment(2, "Bad book!",book));
+
+    return commentList;
   }
 }

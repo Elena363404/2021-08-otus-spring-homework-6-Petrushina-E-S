@@ -16,12 +16,15 @@ public class CommentDaoJpa implements CommentDao {
   @PersistenceContext
   private final EntityManager em;
 
-  public CommentDaoJpa(EntityManager em) {
+  private final BookDao bookDao;
+
+  public CommentDaoJpa(EntityManager em, BookDao bookDao) {
     this.em = em;
+    this.bookDao = bookDao;
   }
 
   @Override
-  public void createComment(Comment comment) {
+  public void saveComment(Comment comment) {
     if (comment.getId() == 0) {
       em.persist(comment);
     } else {
@@ -36,33 +39,23 @@ public class CommentDaoJpa implements CommentDao {
 
   @Override
   public List<Comment> getAllCommentByBookId(long id) {
-    TypedQuery<Comment> query = em.createQuery("select s from Comment s where book_id = :book_id", Comment.class);
-    query.setParameter("book_id", id);
+    TypedQuery<Comment> query = em.createQuery("select c from Comment c where c.book = :book", Comment.class);
+    query.setParameter("book", bookDao.getBookById(id).stream().findFirst().orElse(null));
     return query.getResultList();
-  }
-
-  @Override
-  public void updateComment(Comment comment) {
-    Query query = em.createQuery("update Comment s " +
-      "set s.comment = :comment " +
-      "where s.id = :id");
-    query.setParameter("comment", comment.getComment());
-    query.setParameter("id", comment.getId());
-    query.executeUpdate();
   }
 
   @Override
   public void deleteCommentById(long id) {
     Query query = em.createQuery("delete " +
-      "from Comment s " +
-      "where s.id = :id");
+      "from Comment c " +
+      "where c.id = :id");
     query.setParameter("id", id);
     query.executeUpdate();
   }
 
   @Override
   public List<Comment> getAllComment() {
-    TypedQuery<Comment> query = em.createQuery("select s from Comment s", Comment.class);
+    TypedQuery<Comment> query = em.createQuery("select c from Comment c", Comment.class);
     return query.getResultList();
   }
 }

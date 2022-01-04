@@ -1,7 +1,6 @@
 spring:
   datasource:
     url: jdbc:h2:mem:testdb
-    initialization-mode: always
   jpa:
     generate-ddl: false
     hibernate:
@@ -9,9 +8,7 @@ spring:
     show-sql: true
   sql:
     init:
-      mode: always
-
-
+      mode:
 logging:
   level:
     ROOT: ERROR

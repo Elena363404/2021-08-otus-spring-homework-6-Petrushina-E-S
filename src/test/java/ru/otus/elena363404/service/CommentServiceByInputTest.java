@@ -9,7 +9,11 @@ import org.springframework.shell.Shell;
 import org.springframework.shell.jline.InteractiveShellApplicationRunner;
 import org.springframework.shell.jline.ScriptShellApplicationRunner;
 import ru.otus.elena363404.domain.Author;
-import ru.otus.elena363404.domain.Comment;
+import ru.otus.elena363404.domain.Book;
+import ru.otus.elena363404.domain.Genre;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.Mockito.*;
 
@@ -37,7 +41,6 @@ class CommentServiceByInputTest {
     when(ioService.getInputId()).thenReturn(2L);
     commentService.createComment();
     verify(ioService, times(1)).out("Input comment: \n");
-    verify(ioService, times(1)).out("Input id book for add comment: \n");
   }
 
   @Test
@@ -64,5 +67,40 @@ class CommentServiceByInputTest {
     commentService.getCommentById();
     verify(ioService, times(1)).out("Input id of the comment: \n");
     when(ioService.getInputId()).thenReturn(1L);
+  }
+
+  private List<Book> getAllBooks() {
+    List<Book> bookList = new ArrayList<>();
+    List<Author> authorList = getAllAuthor();
+    List<Genre> genreList = getAllGenre();
+
+    bookList.add(new Book(1, "Doughter of Capitan", authorList.get(1), genreList.get(2)));
+    bookList.add(new Book(2, "Apocalypse", authorList.get(2), genreList.get(0)));
+    bookList.add(new Book(3, "Revolution-1", authorList.get(3), genreList.get(1)));
+    bookList.add(new Book(4, "Revolution-2", authorList.get(3), genreList.get(1)));
+    bookList.add(new Book(5, "It", authorList.get(0), genreList.get(3)));
+
+    return bookList;
+  }
+
+  private List<Author> getAllAuthor() {
+    List<Author> authorList = new ArrayList<>();
+
+    authorList.add(new Author(1, "Stephen King"));
+    authorList.add(new Author(2, "Alexander Pushkin"));
+    authorList.add(new Author(3, "Isaak Newton"));
+    authorList.add(new Author(4, "Vladimir Lenin"));
+
+    return authorList;
+  }
+
+  private List<Genre> getAllGenre() {
+    List<Genre> genreList = new ArrayList<>();
+
+    genreList.add(new Genre(1, "Fantastic"));
+    genreList.add(new Genre(2, "Political"));
+    genreList.add(new Genre(3, "Novel"));
+    genreList.add(new Genre(4, "Horror"));
+    return genreList;
   }
 }

@@ -18,10 +18,12 @@ class CommentTest {
   @DisplayName("Create Comment by constructor")
   @Test
   void shouldHaveCorrectConstructor() {
-    Comment comment = new Comment(7, "Bad book!", 2);
+    Comment comment = new Comment(7, "Bad book!", new Book(3, "NewBook", new Author(3, "Gogol"), new Genre(2, "Novel")));
 
     assertEquals(7, comment.getId());
     assertEquals("Bad book!", comment.getComment());
+    assertEquals("Gogol", comment.getBook().getAuthor().getName());
+    assertEquals("Novel", comment.getBook().getGenre().getName());
   }
 
 }

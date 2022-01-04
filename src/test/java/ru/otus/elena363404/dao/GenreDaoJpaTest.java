@@ -39,7 +39,7 @@ class GenreDaoJpaTest {
   @Test
   void shouldInsertGenre() {
     Genre expectedGenre = new Genre(5, "Thriller");
-    genreDao.createGenre(expectedGenre);
+    genreDao.saveGenre(expectedGenre);
     Genre actualGenre = genreDao.getGenreById(expectedGenre.getId()).stream().findFirst().orElse(null);
     assertThat(actualGenre).usingRecursiveComparison().isEqualTo(expectedGenre);
   }
